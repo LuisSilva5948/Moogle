@@ -30,11 +30,7 @@ namespace Moogle__Consola
 		}
 		private void SetQueryWords()
 		{
-			string pattern = @"[\p{M}]";
-			//this pattern eliminates accent marks
-			QueryText = Regex.Replace(QueryText.ToLower().Normalize(NormalizationForm.FormD), pattern, string.Empty).Normalize(NormalizationForm.FormC);
-			QueryText = Regex.Replace(QueryText, @"_", " ");
-			string[] words = Regex.Split(QueryText, @"\W+").Where((term => !string.IsNullOrWhiteSpace(term))).ToArray();
+			string[] words = Regex.Split(QueryText, @"\W+|_").Where((term => !string.IsNullOrWhiteSpace(term))).ToArray();
 			QueryWords = words;
 			QueryDistinctWords = words.Distinct().ToArray();
 

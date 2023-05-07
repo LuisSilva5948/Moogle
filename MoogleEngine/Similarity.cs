@@ -7,6 +7,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Moogle__Consola
@@ -16,12 +17,14 @@ namespace Moogle__Consola
 		public string QueryText { get; private set; }
 		public string[] FileNames { get; private set; }
 		public string[] DatabaseDistinctWords { get; private set; }
-		public Dictionary<string, Dictionary<string, double>> Doc__Term_newTFIDF { get; private set; }
+		public string[] QueryDistinctWords { get; private set; }
+		public Dictionary<string, string> Doc_Text { get; private set; }
 		public Dictionary<string, double> QueryTerm_TFIDF { get; private set; }
 		public Dictionary<string, Dictionary<string, double>> Doc__Term_TFIDF { get; private set; }
+		public Dictionary<string, Dictionary<string, double>> Doc__Term_newTFIDF { get; private set; }
 		public Dictionary<string, double> BruteSimilarity { get; private set; }
 		public Dictionary<string, double> CosineSimilarity { get; private set; }
-		public List<SearchItem> items { get; private set; }
+		public List<SearchItem> Items { get; private set; }
 
 		public Similarity(Query query, TFIDF tfidf)
 		{
@@ -33,14 +36,15 @@ namespace Moogle__Consola
 			Doc__Term_newTFIDF = new Dictionary<string, Dictionary<string, double>>();
 			BruteSimilarity = new Dictionary<string, double>();
 			CosineSimilarity = new Dictionary<string, double>();
-			items = new List<SearchItem>();
+			Items = new List<SearchItem>();
+			Doc_Text = tfidf.Doc_Text;
+			QueryDistinctWords = query.QueryDistinctWords;
 
-			CalculateSimilitude();
+			CalculateSimilarity();
 			CalculateCosineSimilarity();
 			SetMostSimilarDocuments();
-			
 		}
-		private void CalculateSimilitude()
+		private void CalculateSimilarity()
 		{
 			foreach (string filename in FileNames)
 			{
@@ -111,13 +115,35 @@ namespace Moogle__Consola
 					count++;
 
 					string title = kvp.Key;
-					string snippet = "aqui va el snippet";
-					float score = (float)kvp.Value;
-					items.Add(new SearchItem(title, snippet, score));
+					string snippet = "snippet";
+					double score = kvp.Value;
+					Items.Add(new SearchItem(title, snippet, score));
 				}
 			}
-			else items.Add(new SearchItem("No se han encontrado resultados para tu búsqueda ('" + QueryText + "')", "", 1));
-
+			else Items.Add(new SearchItem("No se han encontrado resultados para tu búsqueda ('" + QueryText + "')", "Intente nuevamente", 1));
+		}
+		private string GetSnippet(string title)
+		{
+			string text = Doc_Text[title];
+			string[] separatedtext = Regex.Split(text, " ").Where(term => !string.IsNullOrWhiteSpace(term)).ToArray();
+			string query = "";
+			foreach (string term in QueryDistinctWords)
+			{
+				double tfidf = 0;
+				if (Doc__Term_newTFIDF[title].ContainsKey(term))
+				{
+					if (Doc__Term_newTFIDF[title][term] > tfidf)
+					{
+						tfidf = Doc__Term_newTFIDF[title][term];
+						query = term;
+					}
+				}
+			}
+			int queryIndex = Array.IndexOf(separatedtext, query);
+			int start = Math.Max(0, queryIndex - 5);
+			int end = Math.Min(separatedtext.Length - 1, queryIndex + 5);
+			string snippet = string.Join(' ', separatedtext, start, end - start + 1);
+			return "snippet";
 		}
 	}
 }

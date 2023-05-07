@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
+    <None Include="wwwroot\css\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MoogleEngine\MoogleEngine.csproj" />
   </ItemGroup>
 

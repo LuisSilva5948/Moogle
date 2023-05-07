@@ -13,9 +13,11 @@ public static class Moogle
 		if (!string.IsNullOrWhiteSpace(query))
 		{
 			Query user_query = new Query(query, tfidf);
-			Similarity x = new Similarity(user_query, tfidf);
-			SearchItem[] items = x.items.ToArray();
-			return new SearchResult(items, query);
+			Similarity similarity = new Similarity(user_query, tfidf);
+			SearchItem[] items = similarity.Items.ToArray();
+			Suggestion suggestion = new Suggestion(query, similarity.DatabaseDistinctWords);
+			string sug = suggestion.newQuery;
+			return new SearchResult(items, sug);
 		}
 		else
 		{

@@ -31,23 +31,20 @@ namespace Moogle__Consola
 			Doc_Words = new Dictionary<string, string[]>();
 
 			SetDataReady();
-			Console.WriteLine("10%");
 			SetDocvsWords();
-			Console.WriteLine("20%");
-			SetTotalWords();
-			Console.WriteLine("30%");
-			Console.WriteLine(TotalDistinctWords.Length);
+			SetTotalDistinctWords();
 		}
 		private void SetDataReady()
 		{
 			for (int i = 0; i < this.Paths.Length; i++)
 			{
-				this.FileNames[i] = Path.GetFileName(Paths[i]);
-				string pattern = @"[\p{M}]";
+				FileNames[i] = Path.GetFileName(Paths[i]);
+				/*string pattern = @"[\p{M}]";
 				//this pattern eliminates accent marks
 				Texts[i] = Regex.Replace(File.ReadAllText(Paths[i]).ToLower().Normalize(NormalizationForm.FormD), pattern, string.Empty)
 					.Normalize(NormalizationForm.FormC);
-				Texts[i] = Regex.Replace(Texts[i], @"_", " ");
+				Texts[i] = Regex.Replace(Texts[i], @"_", " ");*/
+				Texts[i] = File.ReadAllText(Paths[i]);
 				Doc_Text.Add(FileNames[i], Texts[i]);
 			}
 		}
@@ -66,8 +63,28 @@ namespace Moogle__Consola
 				'”', '"', '\'', '\\', '|', '/', '+', '@', '$', '#', '%', '^', '=', '`', '(', ')', '*', '-'};*/
 			for (int i = 0; i < this.Texts.Length; i++)
 			{
-				string[] words = Regex.Split(Texts[i], @"\W+").Where((term => !string.IsNullOrWhiteSpace(term))).ToArray();
-				/*List<string> Words_in_Doc = new List<string>();
+				/*string text = Texts[i];
+				string term = "";
+				List<string> termsList= new List<string>();
+				for (int j = 0; j < text.Length; j++)
+				{
+					if (!char.IsLetterOrDigit(text[j]))
+					{
+						if(string.IsNullOrWhiteSpace(term))
+						termsList.Add(term);
+						term = "";
+					}
+					else
+						term += text[j];
+				}
+				string[] terms = termsList.ToArray();*/
+
+				string[] words = Regex.Split(Texts[i].ToLower(), @"\W+|_").Where(word => !string.IsNullOrWhiteSpace(word)).ToArray();
+				/*foreach (string word in words)
+				{
+					Console.WriteLine(word);
+				}
+				List<string> Words_in_Doc = new List<string>();
 				for (int j = 0; j < words.Length; j++)
 				{
 					if (!String.IsNullOrWhiteSpace(words[j]))
@@ -79,7 +96,7 @@ namespace Moogle__Consola
 				Doc_Words.Add(this.FileNames[i], words);
 			}
 		}
-		private void SetTotalWords()
+		private void SetTotalDistinctWords()
 		{
 			List<string> list = new List<string>();
 			foreach (KeyValuePair<string, string[]> doc in Doc_Words)

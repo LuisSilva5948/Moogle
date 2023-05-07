@@ -12,6 +12,7 @@ namespace Moogle__Consola
 	{
 		public string[] FileNames { get; private set; }
 		public string[] TotalDistinctWords { get; private set; }
+		public Dictionary<string, string> Doc_Text { get; private set; }
 		public Dictionary<string, string[]> Doc_Words { get; private set; }
 		public Dictionary<string, int> Term_DF { get; private set; }
 		public Dictionary<string, double> Term_IDF { get; private set; }
@@ -27,6 +28,7 @@ namespace Moogle__Consola
 			Term_IDF = new Dictionary<string, double>();
 			Doc__Term_TF = new Dictionary<string, Dictionary<string, double>>();
 			Doc__Term_TFIDF = new Dictionary<string, Dictionary<string, double>>();
+			Doc_Text = data.Doc_Text;
 
 			
 			TermFrequency();
