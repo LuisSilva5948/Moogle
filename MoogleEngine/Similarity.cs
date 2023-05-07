@@ -115,7 +115,7 @@ namespace Moogle__Consola
 					count++;
 
 					string title = kvp.Key;
-					string snippet = "snippet";
+					string snippet = GetSnippet(title);
 					double score = kvp.Value;
 					Items.Add(new SearchItem(title, snippet, score));
 				}
@@ -125,25 +125,38 @@ namespace Moogle__Consola
 		private string GetSnippet(string title)
 		{
 			string text = Doc_Text[title];
-			string[] separatedtext = Regex.Split(text, " ").Where(term => !string.IsNullOrWhiteSpace(term)).ToArray();
-			string query = "";
-			foreach (string term in QueryDistinctWords)
+
+            string queryTerm = "";
+			double highestValue = 0;
+            foreach (var kvp in Doc__Term_newTFIDF[title])
+            {
+				string key = kvp.Key;
+				double newValue = kvp.Value;
+                if (newValue > highestValue)
+                {
+                    highestValue = newValue;
+                    queryTerm = key;
+                }
+            }
+            int queryIndex = 0;
+            //int queryTermIndex = 0;
+            //int queryTermStartIndex = 0;
+            //int queryTermEndIndex = 0;
+            string[] separatedtext = Regex.Split(text, " ").ToArray();
+			for (int i = 0; i < separatedtext.Length; i++)
 			{
-				double tfidf = 0;
-				if (Doc__Term_newTFIDF[title].ContainsKey(term))
+				string[] aux = Regex.Split(separatedtext[i], @"\W+|_");
+				if (aux.Contains(queryTerm))
 				{
-					if (Doc__Term_newTFIDF[title][term] > tfidf)
-					{
-						tfidf = Doc__Term_newTFIDF[title][term];
-						query = term;
-					}
+					queryIndex = i;
+					//queryTermIndex = Array.IndexOf(aux, queryTerm);
+					//queryTermStartIndex = aux.Length;
 				}
 			}
-			int queryIndex = Array.IndexOf(separatedtext, query);
-			int start = Math.Max(0, queryIndex - 5);
-			int end = Math.Min(separatedtext.Length - 1, queryIndex + 5);
+			int start = Math.Max(0, queryIndex - 10);
+			int end = Math.Min(separatedtext.Length - 1, queryIndex + 10);
 			string snippet = string.Join(' ', separatedtext, start, end - start + 1);
-			return "snippet";
+            return snippet;
 		}
 	}
 }
