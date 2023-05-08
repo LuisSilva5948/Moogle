@@ -87,7 +87,9 @@ namespace Moogle__Consola
 				}
 				string[] terms = termsList.ToArray();*/
 
-				string[] words = Regex.Split(Texts[i].ToLower(), @"\W+|_").Where(word => !string.IsNullOrWhiteSpace(word)).ToArray();
+				string text = Regex.Replace(Texts[i].ToLower(), @"[°/|\\{}[\]()¿.,;:?!`¨'¡-]|""", string.Empty);
+				string[] words = Regex.Split(text, " ").Where(word => !string.IsNullOrWhiteSpace(word)).ToArray();
+				Console.WriteLine(words.Length);
 				/*foreach (string word in words)
 				{
 					Console.WriteLine(word);

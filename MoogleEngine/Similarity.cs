@@ -19,7 +19,8 @@ namespace Moogle__Consola
 		public string[] DatabaseDistinctWords { get; private set; }
 		public string[] QueryDistinctWords { get; private set; }
 		public Dictionary<string, string> Doc_Text { get; private set; }
-		public Dictionary<string, double> QueryTerm_TFIDF { get; private set; }
+        public Dictionary<string, string[]> Doc_Words { get; private set; }
+        public Dictionary<string, double> QueryTerm_TFIDF { get; private set; }
 		public Dictionary<string, Dictionary<string, double>> Doc__Term_TFIDF { get; private set; }
 		public Dictionary<string, Dictionary<string, double>> Doc__Term_newTFIDF { get; private set; }
 		public Dictionary<string, double> BruteSimilarity { get; private set; }
@@ -38,6 +39,7 @@ namespace Moogle__Consola
 			CosineSimilarity = new Dictionary<string, double>();
 			Items = new List<SearchItem>();
 			Doc_Text = tfidf.Doc_Text;
+			Doc_Words = tfidf.Doc_Words;
 			QueryDistinctWords = query.QueryDistinctWords;
 
 			CalculateSimilarity();
@@ -120,7 +122,7 @@ namespace Moogle__Consola
 		}
 		private string GetSnippet(string title)
 		{
-			/*string text = Doc_Text[title];
+			string text = Doc_Text[title];
 
 			if (text.Length < 50)
 			{
@@ -139,25 +141,18 @@ namespace Moogle__Consola
                     queryTerm = key;
                 }
             }
-            int queryIndex = 0;
+
             //int queryTermIndex = 0;
             //int queryTermStartIndex = 0;
             //int queryTermEndIndex = 0;
-            string[] separatedtext = Regex.Split(text, " ").ToArray();
-			for (int i = 0; i < separatedtext.Length; i++)
-			{
-				string[] aux = Regex.Split(separatedtext[i], @"\W+|_");
-				if (aux.Contains(queryTerm))
-				{
-					queryIndex = i;
-					//queryTermIndex = Array.IndexOf(aux, queryTerm);
-					//queryTermStartIndex = aux.Length;
-				}
-			}
-			int start = Math.Max(0, queryIndex - 10);
-			int end = Math.Min(separatedtext.Length - 1, queryIndex + 10);
-			string snippet = string.Join(' ', separatedtext, start, end - start + 1);*/
-            return "snippet";
+            int queryIndex = Array.IndexOf(Doc_Words[title], queryTerm);
+
+            string[] separatedtext = Regex.Split(text, " ").Where(word => !string.IsNullOrWhiteSpace(word)).ToArray();
+            
+            int start = Math.Max(0, queryIndex - 10);
+			int end = Math.Min(separatedtext.Length - 1, queryIndex + 30);
+			string snippet = string.Join(' ', separatedtext, start, end - start + 1);
+            return snippet;
 		}
 	}
 }
