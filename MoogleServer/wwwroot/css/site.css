@@ -2,7 +2,7 @@
 
 html, body {
     font-family: 'Times New Roman', Times, serif, Helvetica, Arial, sans-serif;
-    background-image: url('Hills.jpg')
+    background-image: url('Background.jpg')
 }
 
 h1:focus {

@@ -105,26 +105,27 @@ namespace Moogle__Consola
 				}
 			}
 			SimilarDocuments = SimilarDocuments.OrderByDescending(kvp => kvp.Value).ToList();
-			int count = 0;
+			
 			if (SimilarDocuments.Count > 0)
 			{
 				foreach (var kvp in SimilarDocuments)
 				{
-					if (count > 4)
-						break;
-					count++;
-
 					string title = kvp.Key;
 					string snippet = GetSnippet(title);
 					double score = kvp.Value;
 					Items.Add(new SearchItem(title, snippet, score));
 				}
 			}
-			else Items.Add(new SearchItem("No se han encontrado resultados para tu búsqueda ('" + QueryText + "')", "Intente nuevamente", 1));
+			else Items.Add(new SearchItem("No se han encontrado resultados para tu búsqueda ('" + QueryText + "')", "Intente nuevamente", 0));
 		}
 		private string GetSnippet(string title)
 		{
-			string text = Doc_Text[title];
+			/*string text = Doc_Text[title];
+
+			if (text.Length < 50)
+			{
+				return text;
+			}
 
             string queryTerm = "";
 			double highestValue = 0;
@@ -155,8 +156,8 @@ namespace Moogle__Consola
 			}
 			int start = Math.Max(0, queryIndex - 10);
 			int end = Math.Min(separatedtext.Length - 1, queryIndex + 10);
-			string snippet = string.Join(' ', separatedtext, start, end - start + 1);
-            return snippet;
+			string snippet = string.Join(' ', separatedtext, start, end - start + 1);*/
+            return "snippet";
 		}
 	}
 }

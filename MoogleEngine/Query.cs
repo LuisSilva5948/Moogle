@@ -30,7 +30,7 @@ namespace Moogle__Consola
 		}
 		private void SetQueryWords()
 		{
-			string[] words = Regex.Split(QueryText.ToLower(), @"\W+|_").Where((term => !string.IsNullOrWhiteSpace(term))).ToArray();
+			string[] words = Regex.Split(QueryText.ToLower(), " ").Where((term => !string.IsNullOrWhiteSpace(term))).ToArray();
 			QueryWords = words;
 			QueryDistinctWords = words.Distinct().ToArray();
 

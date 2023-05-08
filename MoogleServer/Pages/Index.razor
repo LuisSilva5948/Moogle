@@ -4,13 +4,13 @@
 
 <h1>🔍 Moogle!</h1>
 
-<input class="p-1 my-4" @bind="query" placeholder="Introduzca su búsqueda">
+<input class="p-1 my-4" @bind="query" placeholder="Introduzca su búsqueda" @onkeyup="KeyPress">
 
 <button type="default" class="btn btn-primary" @onclick="RunQuery">🔍 Buscar</button>
 
 @if (!string.IsNullOrEmpty(result.Suggestion)) {
     <div class="suggestion">
-            <h4>¿Quizás quisiste decir <strong><a href="#">@result.Suggestion</a></strong>?</h4>
+                <h5>¿Quisite decir <strong><a href="#" @onclick="Suggestion">@result.Suggestion</a></strong>?</h5>
     </div>
 }
 
@@ -31,5 +31,18 @@
 
     private void RunQuery() {
         result = Moogle.Query(query);
+    }
+    
+    private void Suggestion()
+    {
+        query = result.Suggestion;
+        result = Moogle.Query(query);
+    }
+    private void KeyPress(KeyboardEventArgs key)
+    {
+        if (key.Code == "Enter")
+        {
+            RunQuery();
+        }
     }
 }

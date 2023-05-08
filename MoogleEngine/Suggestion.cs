@@ -11,42 +11,52 @@ namespace MoogleEngine
 	public class Suggestion
 	{
 		public string Query { get; private set; }
-		public string newQuery { get; private set; }
+		public string QuerySuggestion { get; private set; }
 		public string[] DataBaseDistinctWords { get; private set; }
-		public Suggestion(string query, string[] databaseDistinctWords)
+        public Suggestion(string query, string[] databaseDistinctWords, Dictionary<string, int> Term_DF)
 		{
-			Query = query;
-			DataBaseDistinctWords = databaseDistinctWords;
-			newQuery = "";
 
-			SetNewQuery();
+            Query = query;
+			DataBaseDistinctWords = databaseDistinctWords;
+            QuerySuggestion = "";
+
+			SetQuerySuggestion(Term_DF);
 		}
-		private void SetNewQuery()
+		private void SetQuerySuggestion(Dictionary<string, int> Term_DF)
 		{
 			string[] queryTerms = Regex.Split(Query.ToLower(), " ").Where(term => !String.IsNullOrWhiteSpace(term)).ToArray();
 			int smallestdistance = int.MaxValue;
 			for (int i = 0; i < queryTerms.Length; i++)
 			{
-				if (i != 0)
+                if (i != 0)
+                {
+                    QuerySuggestion += " ";
+                }
+
+				if (DataBaseDistinctWords.Contains(queryTerms[i]) && Term_DF[queryTerms[i]] > 4)
 				{
-					newQuery += " ";
-				}
-				if (!DataBaseDistinctWords.Contains(queryTerms[i]))
-				{
-					string newQueryTerm = "";
-					foreach (string databaseTerm in DataBaseDistinctWords)
-					{
-						int distance = LevenshteinDistance(queryTerms[i], databaseTerm);
-						if (smallestdistance > distance)
+                    QuerySuggestion += queryTerms[i];
+                }else
+                {
+                    string newQueryTerm = "";
+                    foreach (string databaseTerm in DataBaseDistinctWords)
+                    {
+						if (Term_DF[databaseTerm] > 3)
 						{
-							smallestdistance = distance;
-							newQueryTerm = databaseTerm;
+							int distance = LevenshteinDistance(queryTerms[i], databaseTerm);
+							if (smallestdistance > distance)
+							{
+								smallestdistance = distance;
+								newQueryTerm = databaseTerm;
+							}
 						}
-					}
-					newQuery += newQueryTerm;
-				}
-				else newQuery += queryTerms[i];
-			}
+                    }
+                    QuerySuggestion += newQueryTerm;
+                }
+
+				if (QuerySuggestion == Query)
+					QuerySuggestion = "";
+            }
 		}
 		private int LevenshteinDistance(string s, string t)
 		{

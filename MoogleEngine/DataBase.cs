@@ -11,7 +11,7 @@ namespace Moogle__Consola
 {
 	public class DataBase
 	{
-		public string DataPath = Path.Combine(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.Parent.FullName, "Content");
+		public string DataBasePath { get; private set; }
 		public string[] Paths { get; private set; }
 		public string[] FileNames { get; private set; }
 		public string[] Texts { get; private set; }
@@ -23,7 +23,9 @@ namespace Moogle__Consola
 
 		public DataBase()
 		{
-			Paths = Directory.GetFiles(DataPath, "*.txt");
+			SetDataBasePath();
+
+			Paths = Directory.GetFiles(DataBasePath, "*.txt");
 			FileNames = new string[Paths.Length];
 			Texts = new string[Paths.Length];
 			TotalDistinctWords = new string[0];
@@ -34,6 +36,12 @@ namespace Moogle__Consola
 			SetDocvsWords();
 			SetTotalDistinctWords();
 		}
+		private void SetDataBasePath()
+		{
+			string projectpath = Directory.GetCurrentDirectory();
+			projectpath = projectpath.Replace("MoogleServer", "");
+            DataBasePath = Path.Combine(projectpath, "Content");
+        }
 		private void SetDataReady()
 		{
 			for (int i = 0; i < this.Paths.Length; i++)
