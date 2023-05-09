@@ -13,17 +13,18 @@ public static class Moogle
         //si la query no es vacia, ejecutar la búsqueda
         if (!string.IsNullOrWhiteSpace(query))
 		{
-			Query user_query = new Query(query, tfidf);
+            Query user_query = new Query(query, tfidf);
             Similarity similarity = new Similarity(user_query, tfidf);
-			SearchItem[] items = similarity.Items.ToArray();
+            SearchItem[] items = similarity.Items.ToArray();
             Suggestion suggestion = new Suggestion(query, similarity.DatabaseDistinctWords, tfidf.Term_DF);
             string sug = suggestion.QuerySuggestion;
-			//los documentos encontrados son devueltos junto con una sugerencia
+            //los documentos encontrados son devueltos junto con una sugerencia
             return new SearchResult(items, sug);
         }
 		else
 		{
-			SearchItem[] items = new SearchItem[1] {new SearchItem("Por favor, ingrese algún término para realizar una búsqueda", "Intente nuevamente", 0)};
+			SearchItem[] items = new SearchItem[1] 
+            {new SearchItem("Por favor, ingrese algún término para realizar una búsqueda", "Intente nuevamente", 0)};
 			return new SearchResult(items, "");
 		}
     }
