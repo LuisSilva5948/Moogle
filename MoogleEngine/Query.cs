@@ -30,6 +30,7 @@ namespace Moogle__Consola
 		}
 		private void SetQueryWords()
 		{
+			//tokenizar el texto de la query
 			string[] words = Regex.Split(QueryText.ToLower(), " ").Where((term => !string.IsNullOrWhiteSpace(term))).ToArray();
 			QueryWords = words;
 			QueryDistinctWords = words.Distinct().ToArray();
@@ -48,6 +49,7 @@ namespace Moogle__Consola
 					Query_TF[term] = 1;
 
 				if (DatabaseTerm_DF.ContainsKey(term) && !Query_DF.ContainsKey(term))
+					//DF del termino + 1 porque ademas de aparecer en la base de datos, aparece en la query
 					Query_DF[term] = DatabaseTerm_DF[term] + 1;
 				else
 					Query_DF[term] = 1;
@@ -57,12 +59,12 @@ namespace Moogle__Consola
 				Query_TF[term] = Query_TF[term] / QueryWords.Length;
 			}
 			
-			//IDF and TFIDF
+			//IDF y TFIDF
 			foreach(string term in Query_DF.Keys)
 			{
 				double DF = Query_DF[term];
-				//DatabaseTotalDocs including the query as another doc is totaldocs + 1
-				double TotalDocs = DatabaseTotalDocs + 1;
+                //DatabaseTotalDocs + 1 para que incluya a la query como otro documento
+                double TotalDocs = DatabaseTotalDocs + 1;
 				double IDF = Math.Log2( TotalDocs / DF);
 				double TF = Query_TF[term];
 				double TFIDF = TF * IDF;

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Data;
 using System.Globalization;
+using System.Numerics;
 
 namespace Moogle__Consola
 {
@@ -38,6 +39,7 @@ namespace Moogle__Consola
 		}
 		private void SetDataBasePath()
 		{
+			//busco la carpeta contenedora de mi proyecto y luego la que contiene mis documentos
 			string projectpath = Directory.GetCurrentDirectory();
 			projectpath = projectpath.Replace("MoogleServer", "");
             DataBasePath = Path.Combine(projectpath, "Content");
@@ -47,63 +49,18 @@ namespace Moogle__Consola
 			for (int i = 0; i < this.Paths.Length; i++)
 			{
 				FileNames[i] = Path.GetFileName(Paths[i]);
-				/*string pattern = @"[\p{M}]";
-				//this pattern eliminates accent marks
-				Texts[i] = Regex.Replace(File.ReadAllText(Paths[i]).ToLower().Normalize(NormalizationForm.FormD), pattern, string.Empty)
-					.Normalize(NormalizationForm.FormC);
-				Texts[i] = Regex.Replace(Texts[i], @"_", " ");*/
 				Texts[i] = File.ReadAllText(Paths[i]);
 				Doc_Text.Add(FileNames[i], Texts[i]);
 			}
 		}
-		/*private string ClearAccentMarks(string text)
-		{
-			text = text.Replace('á', 'a');
-			text = text.Replace('é', 'e');
-			text = text.Replace('í', 'i');
-			text = text.Replace('ó', 'o');
-			text = text.Replace('ú', 'u');
-			return text;
-		}*/
 		private void SetDocvsWords()
 		{
-			/*char[] separators = new char[] { '\n', '\t', ' ', '.', ',', ';', ':', '!', '_', '–', '-', '¿', '?', '’', '~', '“',
-				'”', '"', '\'', '\\', '|', '/', '+', '@', '$', '#', '%', '^', '=', '`', '(', ')', '*', '-'};*/
 			for (int i = 0; i < this.Texts.Length; i++)
 			{
-				/*string text = Texts[i];
-				string term = "";
-				List<string> termsList= new List<string>();
-				for (int j = 0; j < text.Length; j++)
-				{
-					if (!char.IsLetterOrDigit(text[j]))
-					{
-						if(string.IsNullOrWhiteSpace(term))
-						termsList.Add(term);
-						term = "";
-					}
-					else
-						term += text[j];
-				}
-				string[] terms = termsList.ToArray();*/
-
-				string text = Regex.Replace(Texts[i].ToLower(), @"[°/|\\{}[\]()¿.,;:?!`¨'¡-]|""", string.Empty);
-				string[] words = Regex.Split(text, " ").Where(word => !string.IsNullOrWhiteSpace(word)).ToArray();
-				Console.WriteLine(words.Length);
-				/*foreach (string word in words)
-				{
-					Console.WriteLine(word);
-				}
-				List<string> Words_in_Doc = new List<string>();
-				for (int j = 0; j < words.Length; j++)
-				{
-					if (!String.IsNullOrWhiteSpace(words[j]))
-					{
-						Words_in_Doc.Add(words[j]);
-					}
-				}
-				words = Words_in_Doc.ToArray();*/
-				Doc_Words.Add(this.FileNames[i], words);
+				//con la clase Regex (expreseiones regulares) elimino de mi texto los signos de puntuacion y ciertos caracteres especiales
+                string text = Regex.Replace(Texts[i].ToLower(), @"[°/|\\{}[\]()¿.,;:?!`¨'¡-]|""", string.Empty);
+                string[] words = Regex.Split(text, " ").Where(word => !string.IsNullOrWhiteSpace(word)).ToArray();
+                Doc_Words.Add(this.FileNames[i], words);
 			}
 		}
 		private void SetTotalDistinctWords()

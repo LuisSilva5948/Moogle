@@ -107,8 +107,9 @@ namespace Moogle__Consola
 				}
 			}
 			SimilarDocuments = SimilarDocuments.OrderByDescending(kvp => kvp.Value).ToList();
-			
-			if (SimilarDocuments.Count > 0)
+
+            
+            if (SimilarDocuments.Count > 0)
 			{
 				foreach (var kvp in SimilarDocuments)
 				{
@@ -131,6 +132,7 @@ namespace Moogle__Consola
 
             string queryTerm = "";
 			double highestValue = 0;
+			
             foreach (var kvp in Doc__Term_newTFIDF[title])
             {
 				string key = kvp.Key;
@@ -142,15 +144,17 @@ namespace Moogle__Consola
                 }
             }
 
-            //int queryTermIndex = 0;
-            //int queryTermStartIndex = 0;
-            //int queryTermEndIndex = 0;
-            int queryIndex = Array.IndexOf(Doc_Words[title], queryTerm);
-
             string[] separatedtext = Regex.Split(text, " ").Where(word => !string.IsNullOrWhiteSpace(word)).ToArray();
-            
-            int start = Math.Max(0, queryIndex - 10);
-			int end = Math.Min(separatedtext.Length - 1, queryIndex + 30);
+
+
+            int queryIndex = Array.IndexOf(separatedtext, queryTerm);
+            if (queryIndex == -1)
+			{
+				queryIndex = Array.IndexOf(Doc_Words[title], queryTerm);
+			}
+
+            int start = Math.Max(0, queryIndex - 5);
+			int end = Math.Min(separatedtext.Length - 1, queryIndex + 10);
 			string snippet = string.Join(' ', separatedtext, start, end - start + 1);
             return snippet;
 		}

@@ -45,6 +45,7 @@ namespace Moogle__Consola
 
 				Dictionary<string, double> Word_TF = new Dictionary<string, double>();
 
+				//obtengo la frecuencia de cada termino en cada documento
 				foreach (string term in words)
 				{
 					if (Word_TF.ContainsKey(term))
@@ -53,6 +54,7 @@ namespace Moogle__Consola
 						Word_TF[term] = 1;
 				}
 
+				//obtengo la cantidad de documentos en los que cada termino de mi base de datos aparece
 				foreach (string term in Word_TF.Keys)
 				{
 					if (Term_DF.ContainsKey(term))
@@ -61,6 +63,7 @@ namespace Moogle__Consola
 						Term_DF[term] = 1;
 				}
 
+				//la frecuencia TF obtenida la convierto de absoluta  a relativa
 				double Terms_in_Doc = words.Length;
 				foreach (string term in Word_TF.Keys)
 				{
@@ -71,6 +74,7 @@ namespace Moogle__Consola
 		}
 		private void InverseDocumentFrequency()
 		{
+			//con la cantidad de documentos en que aparece cada termino, calculamos el idf, la frecuencia inversa
 			foreach (string term in TotalDistinctWords)
 			{
 				double DF = Term_DF[term];
@@ -81,6 +85,7 @@ namespace Moogle__Consola
 		}
 		private void TermFrequency_InverseDocumentFrequency()
 		{
+			//usando todo lo obtenido anteriormente, calculamos el tfidf de cada termino en cada documento
 			foreach(string filename in FileNames)
 			{
 				Dictionary<string, double> Term_TFIDF = new Dictionary<string, double>();
