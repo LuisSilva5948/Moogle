@@ -1,5 +1,0 @@
-Esto es un documento de prueba para mi proyecto
-Aqui hablo de todo
-y de la nada.
-Me llamo Luis.
-Me llamó Luis.

@@ -1,4 +1,0 @@
-El Modelo vectorial de recuperación de información fue presentado por Gerard Salton en 1975 y posteriormente asentado en 1983 junto con Mc Gill .
-Propone un marco en el que es posible el emparejamiento parcial a diferencia del modelo de recuperación booleano, 
-asignando pesos no binarios a los términos índice de las preguntas y de los documentos.
-Estos pesos de los términos se usan para computar el grado de similitud entre cada documento guardado en el sistema y la pregunta del usuario.
