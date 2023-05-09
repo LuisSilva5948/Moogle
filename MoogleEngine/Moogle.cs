@@ -23,7 +23,7 @@ public static class Moogle
         }
 		else
 		{
-			SearchItem[] items = new SearchItem[1] {new SearchItem("Por favor, ingrese algún término para realizar una búsqueda", "Intente nuevamente", 1f)};
+			SearchItem[] items = new SearchItem[1] {new SearchItem("Por favor, ingrese algún término para realizar una búsqueda", "Intente nuevamente", 0)};
 			return new SearchResult(items, "");
 		}
     }
