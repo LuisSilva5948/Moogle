@@ -1,0 +1,137 @@
+\documentclass{beamer}
+
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+
+\usetheme{CambridgeUS}
+\usecolortheme{wolverine}
+\title{Moogle!}
+\author{Luis Daniel Silva Martínez}
+\date{21 de Julio, 2023}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Presentación}
+            \begin{center}
+                \large ¿Alguna vez ha deseado buscar entre todos sus archivos de texto una palabra o frase particular? ¿Ha deseado organizar sus documentos de texto según su relevancia respecto a una búsqueda? 
+            \end{center}
+            \begin{center}
+                \large Pues usted debería probar \textbf{Moogle!}, el nuevo buscador de texto actualmente sensación entre decenas de estudiantes de la Facultad de Matemática y Computación de la Universidad de La Habana.
+            \end{center}
+\end{frame}
+
+\begin{frame}{Introducción}
+    \begin{center}
+    \large \textbf{Moogle!} es un proyecto de programación \underline{totalmente original} cuyo propósito
+    es buscar inteligentemente un texto en un conjunto de documentos.
+    Dada una búsqueda introducida por el usuario, este programa es capaz de leer
+    archivos de texto en formato \emph{.txt} de una colección y devolver los documentos relevantes.
+    \end{center}
+\end{frame}
+
+\begin{frame}{Qué ofrece \textbf{Moogle!}?}
+    \begin{enumerate}
+        \item De una colección de archivos \emph{.txt} predefinida y personalizable en la carpeta \emph{Content} del directorio del proyecto, \textbf{Moogle!} devuelve los documentos relevantes (en orden descendente según la relevancia, el más relevante al inicio) respecto a una query (búsqueda) introducida por el usuario.
+        \item Ofrece sugerencias en caso de que los términos de la query no se encuentren en el corpus de documentos pero existan coincidencias con términos semejantes. Especialmente útil en caso de que haya ocurrido algún error ortográfico al ingresar la búsqueda.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Estructura}
+    \begin{center}
+        \textbf{Moogle!} está desarrollada con tecnología .NET Core 6.0, específicamente usando Blazor como framework web para la interfaz gráfica, y en el lenguaje C\#. La aplicación está dividida en dos componentes fundamentales:
+    \end{center}
+        \begin{itemize}
+            \item MoogleServer: Servidor web encargado de renderizar la interfaz gráfica y sirve los resultados.
+            \item MoogleEngine: Biblioteca de clases que tiene implementada la lógica del algoritmo de búsqueda.
+        \end{itemize}
+\end{frame}
+
+\begin{frame}{Cómo se Ejecuta?}
+    \begin{center}
+        \large Para ejecutar el programa puede abrir el archivo \emph{MoogleServer.sln} o ejecutar el comando \underline{dotnet watch run --project MoogleServer}
+    \end{center}
+\end{frame}
+
+\begin{frame}{TF-IDF}
+    \begin{center}
+        \large El programa hace uso de un modelo vectorial con el algoritmo TF-IDF (Term Frequency - Inverse Document Frecuency) el cual
+        expresa como vector cuán relevante es una palabra para un documento.
+        \begin{equation}
+            TFIDF_{(t,d)} = TF_{(t,d)} \times IDF_{(t)}
+        \end{equation}
+        \begin{itemize}
+            \item t: término
+            \item d: documento
+        \end{itemize}
+        
+    \end{center}
+\end{frame}
+
+\begin{frame}{TF}
+    \begin{center}
+        \large El TF (Term Frequency) de un término es su frecuencia relativa en un documento.
+        \begin{equation}
+            TF_{(t,d)} = \frac{tf}{tw}
+        \end{equation}
+        \begin{itemize}
+            \item \emph{t}: término
+            \item \emph{d}: documento
+            \item \emph{tf}: frecuencia del término \emph{t} en \emph{d}
+            \item \emph{tw}: total de términos en el documento \emph{d}
+        \end{itemize}
+        
+    \end{center}
+\end{frame}
+
+
+\begin{frame}{IDF}
+    \begin{center}
+        \large El IDF (Inverse Document Frequency) de un término es su relación entre su frecuencia entre los documentos del corpus y el total de documentos.
+        \begin{equation}
+            IDF_{(t)} = \log_2\frac{1+N}{1+df}
+        \end{equation}
+        \begin{itemize}
+            \item \emph{t}: término
+            \item \emph{df}: cantidad de documentos que contienen a \emph{t}
+            \item \emph{N}: total de documentos en el corpus
+        \end{itemize}
+        
+    \end{center}
+\end{frame}
+
+
+
+\begin{frame}{Similitud del Coseno}
+    \begin{center}
+        \large La fórmula de Similitud del Coseno, permite obtener la relevancia del
+        documento respecto a la búsqueda introducida por el usuario, comprobando el coseno
+        del ángulo entre los vectores de cada documento con la query.
+        \begin{equation}
+            SimCos(\theta) = \frac{D \cdot Q}{||D|| ~ ||Q||}
+        \end{equation}
+    \end{center}
+    \begin{itemize}
+        \item D: vector del documento
+        \item Q: vector de la query (búsqueda)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Sugerencia}
+    \begin{center}
+        \large En caso de haber encontrado pocos documentos relevantes o haber introducido un término en la query que no se encuentra en la colección,
+        el programa ofrece una sugerencia para una mejor búsqueda. Esto gracias a la fórmula de Distancia de Levenshtein, buscando los términos más similares a la query dentro del corpus.
+    \end{center}
+\end{frame}
+
+\begin{frame}{Especificaciones}
+    \begin{itemize}
+        \item El programa está cableado para encontrar la carpeta \emph{Content} dentro de la carpeta que contiene a todo el proyecto. Para realizar búsquedas entre los documentos \emph{.txt} de su elección, deberá copiarlos a la carpeta \emph{Content} ubicada en el directorio principal del proyecto.
+        \item Para introducir la query puede presionar la tecla \texttt{Enter} luego de escribir para que haga la búsqueda sin tocar el botón de \texttt{Buscar}.
+        \item Para introducir la sugerencia dada por el programa puede presionarla directamente y llevar a cabo la búsqueda con esa sugerencia como query.
+    \end{itemize}
+\end{frame}
+    
+
+\end{document}
