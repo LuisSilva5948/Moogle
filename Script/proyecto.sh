@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd..
+
 run() {
     echo "Ejecutando el proyecto..."
     dotnet watch run --project MoogleServer
@@ -43,7 +45,12 @@ show_slides() {
 
 clean() {
     echo "Limpiando archivos auxiliares..."
+    cd Informe
     find . -type f ( -iname "*.aux" -o -iname "*.log" -o -iname "*.toc" ) -delete
+    cd ..
+    cd Presentacion
+    find . -type f ( -iname "*.aux" -o -iname "*.log" -o -iname "*.toc" ) -delete
+    cd ..
 }
 
 case "$1" in
@@ -68,11 +75,11 @@ case "$1" in
     *)
         echo "Uso: proyecto.sh [opción]"
         echo "Opciones disponibles:"
-        echo "run           Ejecutar el proyecto"
-        echo "report        Compilar y generar el PDF del informe"
-        echo "slides        Compilar y generar el PDF de las diapositivas"
-        echo "show_report   Mostrar el informe en un visor de PDFs"
-        echo "show_slides   Mostrar las diapositivas en un visor de PDFs"
-        echo "clean         Eliminar archivos auxiliares"
+        echo "run          - Ejecutar el proyecto"
+        echo "report       - Compilar y generar el PDF del informe"
+        echo "slides       - Compilar y generar el PDF de las diapositivas"
+        echo "show_report  - Mostrar el informe en un visor de PDFs"
+        echo "show_slides  - Mostrar las diapositivas en un visor de PDFs"
+        echo "clean        - Eliminar archivos auxiliares"
         ;;
 esac
