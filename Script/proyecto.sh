@@ -1,51 +1,48 @@
 #!/bin/bash
 
 run() {
-    # Código para ejecutar el proyecto
     echo "Ejecutando el proyecto..."
     dotnet watch run --project MoogleServer
 }
 
 compile_report() {
-    # Código para compilar y generar el informe en PDF
     echo "Compilando el informe..."
-    # Agrega aquí los comandos para compilar y generar el PDF del informe LaTeX
+    cd Informe
+    pdflatex informe.tex
+    pdflatex informe.tex
+    pdflatex informe.tex
+    cd ..
 }
 
 compile_slides() {
-    # Código para compilar y generar las diapositivas en PDF
-    echo "Compilando las diapositivas..."
-    # Agrega aquí los comandos para compilar y generar el PDF de las diapositivas LaTeX
+    echo "Compilando las slides..."
+    cd Presentacion
+    pdflatex presentacion.tex
+    pdflatex presentacion.tex
+    pdflatex presentacion.tex
+    cd ..
 }
 
 show_report() {
-    # Verificar si el archivo PDF del informe existe
     if [ ! -f "informe.pdf" ]; then
         compile_report
     fi
 
-    # Código para mostrar el informe en un visor de PDFs
     echo "Mostrando el informe..."
-    # Agrega aquí el comando para abrir el PDF del informe en un visor
+    xdg-open Informe/informe.pdf
 }
 
 show_slides() {
-    # Verificar si el archivo PDF de las diapositivas existe
     if [ ! -f "diapositivas.pdf" ]; then
         compile_slides
     fi
 
-    # Código para mostrar las diapositivas en un visor de PDFs
     echo "Mostrando las diapositivas..."
-    # Agrega aquí el comando para abrir el PDF de las diapositivas en un visor
+    xdg-open Presentacion/presentacion.pdf
 }
 
 clean() {
-    # Código para eliminar los archivos auxiliares
     echo "Limpiando archivos auxiliares..."
-    # Agrega aquí los comandos para eliminar los archivos auxiliares generados
-    
-    # Por ejemplo, si los archivos auxiliares tienen extensiones específicas:
     find . -type f ( -iname "*.aux" -o -iname "*.log" -o -iname "*.toc" ) -delete
 }
 
