@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd..
+
 run() {
     echo "Ejecutando el proyecto..."
     dotnet watch run --project MoogleServer
@@ -43,7 +45,12 @@ show_slides() {
 
 clean() {
     echo "Limpiando archivos auxiliares..."
+    cd Informe
     find . -type f ( -iname "*.aux" -o -iname "*.log" -o -iname "*.toc" ) -delete
+    cd ..
+    cd Presentacion
+    find . -type f ( -iname "*.aux" -o -iname "*.log" -o -iname "*.toc" ) -delete
+    cd ..
 }
 
 case "$1" in
