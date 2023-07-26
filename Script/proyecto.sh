@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# Funciones
 run() {
     echo "Ejecutando el proyecto..."
     cd ..
     dotnet watch run --project MoogleServer
-    cd script
+    cd Script
 }
 
 report() {
@@ -14,24 +13,23 @@ report() {
     cd Informe
     pdflatex Informe.tex
     cd ..
-    cd script
+    cd Script
 }
 
 slides() {
-    echo "Compilando y generando el PDF de la presentación..."
+    echo "Compilando la presentación..."
     cd ..
-    cd Presentacion
-    #chmod u+w Presentacion_Moogle.tex
-    pdflatex Presentacion_Moogle.tex
+    cd Presentación
+    pdflatex Presentación.tex
     cd ..
-    cd script
+    cd Script
 }
 
 show_report() {
     cd ..
     cd Informe
     if [ ! -f Informe.pdf ]; then
-        echo "Compilando y generando el PDF del informe..."
+        echo "Compilando el informe..."
         pdflatex Informe.tex
     fi
     echo "Visualizando el informe..."
@@ -42,7 +40,7 @@ show_report() {
         return 1
     fi
     cd ..
-    cd script
+    cd Script
 }
 
 show_slides() {
@@ -53,13 +51,13 @@ show_slides() {
     fi
     echo "Visualizando la presentación..."
     if [ -z "$1"]; then
-        xdg-open Presentacion_Moogle.pdf
+        xdg-open Presentación.pdf
     else
-        $1 Presentacion_Moogle.pdf
+        $1 Presentación.pdf
         return 1
     fi
     cd ..
-    cd script
+    cd Script
 }
 
 clean() {
@@ -68,10 +66,10 @@ clean() {
     cd Informe
     find . ! -name '*.tex' ! -name '*.png' ! -name '*.jpg' -type f -delete
     cd ..
-    cd Presentacion
+    cd Presentación
     find . ! -name '*.tex' -type f -delete
     cd ..
-    cd script
+    cd Script
 }
 
 Guide() {
@@ -94,12 +92,10 @@ Guide() {
     echo " "
     echo "6) El comando <clean> te permite borrar los archivos auxiliares que se crean cuando se compilan y se general los PDF del Informe y la Presentacion"
     echo " "
-    echo "7) El comando <ZIP> te permite comprimir el Informe,la Presentacion y la carpeta del Proyecto, para usarlo solo debe seguir con las instrucciones que se muestran al darle al comando"
-    echo " "
 }
 
 # opciones
-OPTIONS="run report slides show_report show_slides clean ZIP Guide"
+OPTIONS="run report slides show_report show_slides clean Guide"
 
 # Ejecución del script
 
