@@ -2,112 +2,82 @@
 
 run() {
     echo "Ejecutando el proyecto..."
-    cd ..
-    dotnet watch run --project MoogleServer
-    cd Script
+    dotnet watch run --project ../MoogleServer
 }
 
-report() {
-    echo "Compilando y generando el PDF del informe..."
-    cd ..
-    cd Informe
+compile_report() {
+    echo "Compilando el informe..."
+    cd ../informe
     pdflatex Informe.tex
-    cd ..
-    cd Script
+    cd ../script
 }
 
-slides() {
+compile_slides() {
     echo "Compilando la presentación..."
-    cd ..
-    cd Presentación
+    cd ../presentación
     pdflatex Presentación.tex
-    cd ..
-    cd Script
+    cd ../script
 }
 
 show_report() {
-    cd ..
-    cd Informe
-    if [ ! -f Informe.pdf ]; then
-        echo "Compilando el informe..."
-        pdflatex Informe.tex
+    cd ../informe
+    if [ ! -f "Informe.pdf" ]; then
+        compile_report
     fi
-    echo "Visualizando el informe..."
-    if [ -z "$1"]; then
-        xdg-open Informe.pdf
-    else
-        $1 Informe.pdf
-        return 1
-    fi
-    cd ..
-    cd Script
+    echo "Mostrando el informe..."
+    xdg-open Informe.pdf
+    cd ../script
 }
 
 show_slides() {
-    cd ..
-    cd Presentacion
-    if [ ! -f Presentacion_Moogle.pdf]; then
-        slides
+    cd ../presentación
+
+    if [ ! -f "Presentación.pdf" ]; then
+        compile_slides
     fi
-    echo "Visualizando la presentación..."
-    if [ -z "$1"]; then
-        xdg-open Presentación.pdf
-    else
-        $1 Presentación.pdf
-        return 1
-    fi
-    cd ..
-    cd Script
+    echo "Mostrando la Presentación..."
+    xdg-open Presentación.pdf
+    cd ../script
 }
 
 clean() {
-    echo "Eliminando los ficheros auxiliares..."
-    cd ..
-    cd Informe
-    find . ! -name '*.tex' ! -name '*.png' ! -name '*.jpg' -type f -delete
-    cd ..
-    cd Presentación
-    find . ! -name '*.tex' -type f -delete
-    cd ..
-    cd Script
+    echo "Eliminando archivos auxiliares..."
+    cd ../informe
+    rm -f Informe.aux Informe.fls Informe.log Informe.fdb_latexmk Informe.out Informe.pdf Informe.synctex.gz Informe.toc
+    cd ../presentación
+    rm -f Presentación.aux Presentación.fls Presentación.log Presentación.nav Presentación.out Presentación.pdf Presentación.synctex.gz Presentación.snm Presentación.toc Presentación.fdb_latexmk
+    cd ../script
 }
 
-Guide() {
-    echo " "
-    echo "1) El comando <run> te permite ejecutar el Moogle"
-    echo " "
-    echo "2) El comando <report> te permite Compilar y generar el PDF del Informe del Moogle (Latex) que se encuentra en la carpeta Informe"
-    echo " "
-    echo "3) El comando <slides> te permite Compilar y generar el PDF de la Presentacion del Moogle (Latex) que se encuentra en la carpeta Presentacion"
-    echo " "
-    echo "4) El comando <show_report> te permite mostrar el PDF Informe del Moogle, y si este no ha sido generado, lo genera y luego lo muestra"
-    echo "    - Este comando tiene la utilidad de que puede ser ejecutado con el lector de PDF que desee, solo basta con pasarselo como parametro de la siguiente forma: "
-    echo "    <script_name.sh> <show_report> <lector_a_usar>"
-    echo "    En el caso de que no le pase ningun lector como parametro, se abrira con un lector de PDF por defecto"
-    echo " "
-    echo "5) El comando <show_slides> te permite mostrar el PDF Presentacion del Moogle, y si este no ha sido generado, lo genera y luego lo muestra"
-    echo "    - Este comando tiene la utilidad de que puede ser ejecutado con el lector de PDF que desee, solo basta con pasarselo como parametro de la siguiente forma: "
-    echo "    <script_name.sh> <show_slides> <lector_a_usar>"
-    echo "    En el caso de que no le pase ningun lector como parametro, se abrira con un lector de PDF por defecto"
-    echo " "
-    echo "6) El comando <clean> te permite borrar los archivos auxiliares que se crean cuando se compilan y se general los PDF del Informe y la Presentacion"
-    echo " "
-}
+case "$1" in
+    run)
+        run
+        ;;
+    report)
+        compile_report
+        ;;
+    slides)
+        compile_slides
+        ;;
+    show_report)
+        show_report
+        ;;
+    show_slides)
+        show_slides
+        ;;
+    clean)
+        clean
+        ;;
+    *)
+        echo "Uso: ./proyecto.sh [opción]"
+        echo "Opciones disponibles:"
+        echo "run          - Ejecutar el proyecto"
+        echo "report       - Compilar y generar el PDF del informe"
+        echo "slides       - Compilar y generar el PDF de la presentación"
+        echo "show_report  - Mostrar pdf del informe"
+        echo "show_slides  - Mostrar pdf de la presentación"
+        echo "clean        - Eliminar archivos auxiliares"
+        ;;
+esac
 
-# opciones
-OPTIONS="run report slides show_report show_slides clean Guide"
-
-# Ejecución del script
-
-OPT=$1
-if [ "$OPT" = "" ]; then
-    echo "Sintaxys se uso: $0 <opcion>"
-    echo ""
-    echo "Opciones:"
-    for i in $OPTIONS; do
-        echo "  $i"
-    done
-    exit 1
-fi
-
-"$@"
+# En caso de que el pdf compile con errores repetir la compilación nuevamente
