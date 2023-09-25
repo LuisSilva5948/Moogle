@@ -119,7 +119,7 @@ namespace Moogle__Consola
 					Items.Add(new SearchItem(title, snippet, score));
 				}
 			}
-			else Items.Add(new SearchItem("No se han encontrado resultados para tu búsqueda ('" + QueryText + "')", "Intente nuevamente", 0));
+			else Items.Add(new SearchItem("No se han encontrado resultados para tu búsqueda ( \"" + QueryText + "\" )", "Intente nuevamente", 0));
 		}
 		private string GetSnippet(string title)
 		{

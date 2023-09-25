@@ -46,7 +46,7 @@ namespace MoogleEngine
                     string newQueryTerm = "";
                     foreach (string databaseTerm in DataBaseDistinctWords)
                     {
-						if (Term_DF[databaseTerm] > 3)
+						if (Term_DF[databaseTerm] > 2)
 						{
 							//para calcular la similitud de una palabra a otra uso el algoritmo de distancia de Levenshtein
 							int distance = LevenshteinDistance(queryTerms[i], databaseTerm);
@@ -91,9 +91,9 @@ namespace MoogleEngine
 					// si son iguales en posiciones equidistantes el peso es 0
 					// de lo contrario el peso suma a uno.
 					costo = (s[i - 1] == t[j - 1]) ? 0 : 1;
-					d[i, j] = System.Math.Min(System.Math.Min(d[i - 1, j] + 1,  //Eliminacion
-								  d[i, j - 1] + 1),                             //Insercion 
-								  d[i - 1, j - 1] + costo);                     //Sustitucion
+					d[i, j] = Math.Min(Math.Min(d[i - 1, j] + 1,				//Eliminacion
+												d[i, j - 1] + 1),				//Insercion 
+												d[i - 1, j - 1] + costo);		//Sustitucion
 				}
 			}
 			return d[m, n];
