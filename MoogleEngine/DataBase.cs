@@ -57,7 +57,7 @@ namespace Moogle__Consola
 		{
 			for (int i = 0; i < this.Texts.Length; i++)
 			{
-				//con la clase Regex (expreseiones regulares) elimino de mi texto los signos de puntuacion y ciertos caracteres especiales
+				//con la clase Regex (expresiones regulares) elimino de mi texto los signos de puntuacion y ciertos caracteres especiales
                 string text = Regex.Replace(Texts[i].ToLower(), @"[°/|\\{}[\]()¿.,;:?!`¨'¡-]|""", string.Empty);
                 string[] words = Regex.Split(text, " ").Where(word => !string.IsNullOrWhiteSpace(word)).ToArray();
                 Doc_Words.Add(this.FileNames[i], words);
